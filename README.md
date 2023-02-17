@@ -16,3 +16,5 @@ Démo de la première GUI
 
 
 ![demo GUI elec v1 0](https://user-images.githubusercontent.com/92795126/219708763-d95c829b-2dfa-490d-b9af-1fa8079ecec7.gif)
+
+Valeur pour allumer la LED verte : 30
