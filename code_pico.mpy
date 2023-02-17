@@ -1,0 +1,55 @@
+from machine import Pin
+import utime
+import math
+
+# Objects for pins trigger and echo in HC-SR04
+pin_trigger = Pin(1, Pin.OUT)
+pin_echo = Pin(0, Pin.IN)
+
+# Red led for too close and Green led for not too close
+led_red = Pin(2, Pin.OUT)
+led_green = Pin(3, Pin.OUT)
+
+while True:
+    # Pull the trigger low and pause
+    pin_trigger.low()
+    utime.sleep_us(2)
+    
+    # Pull the trigger high for 5 us
+    pin_trigger.high()
+    utime.sleep_us(5)
+    
+    # Pull the trigger low
+    pin_trigger.low()
+    
+    # Wait when echo is low and add timestamp for it
+    while pin_echo.value() == 0:
+        signal_off = utime.ticks_us()
+    
+    # Wait when echo is high and add timestamp for it
+    while pin_echo.value() == 1:
+        signal_on = utime.ticks_us()
+        
+    # Calculate time between on and of signal
+    timepassed = signal_on - signal_off
+    
+    # Multiply the journey time by the speed of souind 0.0343 cm per microsecond
+    object_distance = math.floor((timepassed * 0.0343) / 2)
+    
+    print("The distance from object is ",object_distance,"cm")
+    
+    # if object is too close light up the Red led
+    if object_distance == 30:
+        led_red.value(0)
+        led_green.value(1)
+    else:
+        led_red.value(1)
+        led_green.value(0)
+        
+    # if object is too close light up the Green Led
+    # if object_distance >= 10:
+    #    led_red.value(0)
+    #    led_green.value(1)
+        
+    # Sleep one second
+    utime.sleep(1)
