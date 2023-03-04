@@ -6,6 +6,9 @@ import math
 pin_trigger = Pin(3, Pin.OUT)
 pin_echo = Pin(4, Pin.IN)
 
+led_red = Pin(2, Pin.OUT)
+led_green = Pin(3, Pin.OUT)
+
 
 valeur = 1
 
@@ -108,6 +111,19 @@ def main_loop():
     
     # Multiply the journey time by the speed of souind 0.0343 cm per microsecond
     object_distance = math.floor((timepassed * 0.0343) / 2)
+    
+    # if object is too close light up the Red led
+    if object_distance == 30:
+        led_red.value(0)
+        led_green.value(1)
+    else:
+        led_red.value(1)
+        led_green.value(0)
+
+    # if object is too close light up the Green Led
+    # if object_distance >= 10:
+    #    led_red.value(0)
+    #    led_green.value(1)
     
     print("The distance from object is ",object_distance,"cm")
     valeur = object_distance
