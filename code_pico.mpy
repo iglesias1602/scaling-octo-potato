@@ -6,8 +6,8 @@ import math
 pin_trigger = Pin(3, Pin.OUT)
 pin_echo = Pin(4, Pin.IN)
 
-led_red = Pin(2, Pin.OUT)
-led_green = Pin(3, Pin.OUT)
+led_red = Pin(0, Pin.OUT)
+led_green = Pin(1, Pin.OUT)
 
 
 valeur = 1
@@ -113,7 +113,7 @@ def main_loop():
     object_distance = math.floor((timepassed * 0.0343) / 2)
     
     # if object is too close light up the Red led
-    if object_distance == 30:
+    if object_distance >= 30:
         led_red.value(0)
         led_green.value(1)
     else:
@@ -135,4 +135,3 @@ while 1:
     main_loop()
     utime.sleep_ms(20)
     clear()
-
