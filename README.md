@@ -6,7 +6,8 @@ Il y a une démo de l'état actuel du projet sur WokWi:
 Schéma du montage :
  
  
-![image](https://user-images.githubusercontent.com/93054207/222914483-cf8d485d-9524-4422-97e8-2d0d6368bd79.png)
+![image](https://user-images.githubusercontent.com/93054207/223093015-63ad8464-28ec-4994-8610-53962a15aded.png)
+
 
 Lien vers le projet WokWi:
 https://wokwi.com/projects/358442679914184705
