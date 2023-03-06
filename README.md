@@ -12,6 +12,10 @@ Schéma du montage :
 Lien vers le projet WokWi:
 https://wokwi.com/projects/358442679914184705
 
+gif du projet sur WokWi:
+
+![demo GUI elec v1 0](https://user-images.githubusercontent.com/92795126/223093417-d64b7874-242a-484f-8d32-5f35df0ed5a5.gif)
+
 
 Démo de la première GUI
 
