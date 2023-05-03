@@ -2,6 +2,13 @@ from io import *
 from machine import Pin
 import utime
 import math
+from machine import Pin, Timer, ADC
+
+
+
+
+
+
 
 pin_trigger = Pin(4, Pin.OUT)
 pin_echo = Pin(3, Pin.IN)
@@ -13,14 +20,14 @@ led_green = Pin(1, Pin.OUT)
 valeur = 1
 
 # Left Display
-Ag = Pin(10,Pin.OUT) # Top
-Bg = Pin(11,Pin.OUT) # Top Right
-Cg = Pin(13,Pin.OUT) # Bottom Right
-Dg = Pin(6,Pin.OUT) # Bottom
-Eg = Pin(7,Pin.OUT)# Bottom Left
+Ag = Pin(8,Pin.OUT) # Top
+Bg = Pin(7,Pin.OUT) # Top Right
+Cg = Pin(6,Pin.OUT) # Bottom Right
+Dg = Pin(12,Pin.OUT) # Bottom
+Eg = Pin(11,Pin.OUT)# Bottom Left
 Fg = Pin(9,Pin.OUT)# Top Left
-Gg = Pin(8, Pin.OUT)# Middle
-DPg = Pin(12,Pin.OUT) # Decimal Point
+Gg = Pin(10, Pin.OUT)# Middle
+DPg = Pin(5,Pin.OUT) # Decimal Point
 
 # Right Display
 Ad = Pin(20,Pin.OUT)    # Top
@@ -36,18 +43,39 @@ leftDisplay = [Ag, Bg, Cg, Dg, Eg, Fg, Gg, DPg] # Left Display
 rightDisplay = [Ad, Bd, Cd, Dd, Ed, Fd, Gd]    # Right Display
 
 #common anode 7 segment
+#    c b a g f d,e
 chars = [
-    [0,0,0,0,0,0,1,1], #0
-    [1,0,0,1,1,1,1,1], #1
-    [0,0,1,0,0,1,0,1], #2
-    [0,0,0,0,1,1,0,1], #3
-    [1,0,0,1,1,0,0,1], #4
-    [0,1,0,0,1,0,0,1], #5
+    [0,0,0,1,0,0,0,1], #0
+    [0,0,1,1,1,1,1,1], #1
+    [1,0,0,0,1,0,0,1], #2
+    [0,0,0,0,1,0,1,1], #3
+    [0,0,1,0,0,1,1,1], #4
+    [0,1,0,0,0,0,1,1], #5
     [0,1,0,0,0,0,0,1], #6
     [0,0,0,1,1,1,1,1], #7
     [0,0,0,0,0,0,0,1], #8
-    [0,0,0,0,1,0,0,1], #9
+    [0,0,0,0,0,0,1,1], #9
     ]
+
+def init_leds():
+    for i in range(4): # pin 0 à 3
+         led = Pin(i)
+         led.init(Pin.OUT) 
+
+def set_leds(x):
+    for i in range(4): # pin 0 à 3
+         led = Pin(i)
+         led.value(  (x>>i)%2 )       # la pin i prend la valeur du bit i de x
+                                      # le reste de la division par 2 après décallage de i position vers la droite
+                                      # (reste de la division par 2 == 1) <=> chiffre impair
+
+def button_init():
+    button = Pin(4)
+    button.init(mode=Pin.IN,pull=Pin.PULL_UP)
+
+def get_button():
+    button = Pin(4)
+    return button.value()
 
 
 def count(display, number):
@@ -86,6 +114,8 @@ def init():
 
 def main_loop():
     global valeur
+    signal_on = 0
+    signal_off = 0
     # Pull the trigger low and pause
     pin_trigger.low()
     utime.sleep_us(2)
@@ -96,11 +126,11 @@ def main_loop():
     
     # Pull the trigger low
     pin_trigger.low()
-    
+    print('a')
     # Wait when echo is low and add timestamp for it
     while pin_echo.value() == 0:
         signal_off = utime.ticks_us()
-    
+    print('b')
     # Wait when echo is high and add timestamp for it
     while pin_echo.value() == 1:
         signal_on = utime.ticks_us()
