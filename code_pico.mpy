@@ -48,27 +48,7 @@ chars = [
     [0,0,0,1,1,1,1,1], #7
     [0,0,0,0,0,0,0,1], #8
     [0,0,0,0,0,0,1,1], #9
-    ]
-
-def init_leds():
-    for i in range(4): # pin 0 à 3
-         led = Pin(i)
-         led.init(Pin.OUT) 
-
-def set_leds(x):
-    for i in range(4): # pin 0 à 3
-         led = Pin(i)
-         led.value(  (x>>i)%2 )       # la pin i prend la valeur du bit i de x
-                                      # le reste de la division par 2 après décallage de i position vers la droite
-                                      # (reste de la division par 2 == 1) <=> chiffre impair
-
-def button_init():
-    button = Pin(4)
-    button.init(mode=Pin.IN,pull=Pin.PULL_UP)
-
-def get_button():
-    button = Pin(4)
-    return button.value()
+    ] 
 
 def count(display, number):
     if 0 <= number < len(chars):
@@ -97,7 +77,7 @@ def init():
 def check(timer1):
     global valeur
     valeur = max(min(valeur, 999), 0)
-    # By using valeur = max(min(valeur, 999), 0), the valeur variable is limited between 0 and 999,
+    # By using valeur = min(valeur, 999), the valeur variable is limited to 999,
     # which prevents "list index out of range" errors in the count()
     # function when trying to display numbers larger than what the display can handle.
     
@@ -127,16 +107,23 @@ def main_loop():
     # Pull the trigger low
     pin_trigger.low()
     print('a')
+    
     # Wait when echo is low and add timestamp for it
+    timeout_start = utime.ticks_us()
     while pin_echo.value() == 0:
         signal_off = utime.ticks_us()
-    print('b')
+        if utime.ticks_diff(signal_off, timeout_start) > 100000:  # Timeout after 100 ms
+            break
+
     # Wait when echo is high and add timestamp for it
+    timeout_start = utime.ticks_us()
     while pin_echo.value() == 1:
         signal_on = utime.ticks_us()
-        
-    # Calculate time between on and of signal
-    timepassed = signal_on - signal_off
+        if utime.ticks_diff(signal_on, timeout_start) > 100000:  # Timeout after 100 ms
+            break
+    
+    # Calculate time between on and off signal
+    timepassed = utime.ticks_diff(signal_on, signal_off)
     
     # Multiply the journey time by the speed of souind 0.0343 cm per microsecond
     object_distance = math.floor((timepassed * 0.0343) / 2)
