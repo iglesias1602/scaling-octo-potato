@@ -96,8 +96,8 @@ def init():
 
 def check(timer1):
     global valeur
-    valeur = min(valeur, 999)
-    # By using valeur = min(valeur, 999), the valeur variable is limited to 999,
+    valeur = max(min(valeur, 999), 0)
+    # By using valeur = max(min(valeur, 999), 0), the valeur variable is limited between 0 and 999,
     # which prevents "list index out of range" errors in the count()
     # function when trying to display numbers larger than what the display can handle.
     
