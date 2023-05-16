@@ -96,11 +96,6 @@ def check(timer1):
         DPg.value(0)
         count(rightDisplay, (valeur % 100) // 10)
 
-def change_limit(param):
-    global nouvelle_limit
-    nouvelle_limit = param
-
-
 
 def main_loop():
     global valeur, limit
@@ -112,7 +107,6 @@ def main_loop():
         except ValueError:
             pass
         else:
-            print('AAAA', line)
             limit = int(line)
     
     # print(limit)
@@ -155,14 +149,10 @@ def main_loop():
     #uart.write(str(object_distance).encode() + b'\n')
     #utime.sleep_ms(10)
     
-    print("main", limit)
-
     if object_distance <= limit:
-        print("green")
         led_red.value(0)
         led_green.value(1)
     else:
-        print("red")
         led_red.value(1)
         utime.sleep_ms(100)
         led_red.value(0)
